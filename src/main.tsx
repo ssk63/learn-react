@@ -7,7 +7,7 @@ import './index.css'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <FormProvider>
-      <App />
+    <App />
     </FormProvider>
   </React.StrictMode>,
 )
