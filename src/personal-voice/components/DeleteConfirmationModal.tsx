@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConfirmationDialog } from '../../shared/components/ui';
+import { ConfirmationDialog } from '../../shared/components';
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;

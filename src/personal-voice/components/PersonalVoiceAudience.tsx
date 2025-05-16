@@ -1,7 +1,7 @@
 import React from "react";
 import type { FormEvent } from "react";
 import type { AudienceProps } from "../models/audience.model";
-import { CustomCheckbox } from "../../shared/components/ui";
+import { CustomCheckbox } from "../../shared/components";
 
 /**
  * Presentational component for the Audience Targeting step

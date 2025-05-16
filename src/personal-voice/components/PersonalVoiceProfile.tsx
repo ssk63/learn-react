@@ -1,5 +1,6 @@
 import React from "react";
 import type { ProfileProps } from "../models/profile.model";
+import { SvgIcon } from "../../shared/icons";
 
 /**
  * Presentational component for the Personal Profile form
@@ -55,9 +56,7 @@ export const PersonalVoiceProfile: React.FC<ProfileProps> = ({
                 <option value="oceania">Oceania</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
+                <SvgIcon name="chevron-down" size="sm" className="fill-current h-4 w-4" />
               </div>
             </div>
             {errors.region && <p className="mt-1 text-xs text-red-500">{errors.region}</p>}

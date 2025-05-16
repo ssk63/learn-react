@@ -1,5 +1,6 @@
 import React from "react";
 import type { StepperProps } from "../models/stepper.model";
+import { SvgIcon } from "../../shared/icons";
 
 /**
  * Presentational component for the multi-step process indicator
@@ -8,8 +9,12 @@ export const PersonalVoiceStepper: React.FC<StepperProps> = ({
   steps, 
   currentStep 
 }) => {
+  // Fixed size for the SVG dots (should match the actual size of the SVG)
+  const dotSize = 20;
+  
   return (
     <div className="w-full my-6">
+      {/* Step labels */}
       <div className="flex justify-between mb-2">
         {steps.map((step) => (
           <div 
@@ -23,28 +28,48 @@ export const PersonalVoiceStepper: React.FC<StepperProps> = ({
         ))}
       </div>
       
-      <div className="relative">
-        {/* Background line */}
-        <div className="absolute inset-0 h-1 top-1/2 -translate-y-1/2 bg-gray-200"></div>
-        
-        {/* Progress line */}
+      {/* Stepper container with fixed height */}
+      <div style={{ position: 'relative', height: `${dotSize}px` }}>
+        {/* Lines container with exact positioning */}
         <div 
-          className="absolute h-1 top-1/2 -translate-y-1/2 bg-orange-500"
-          style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
+          style={{ 
+            position: 'absolute',
+            left: `${dotSize / 2}px`,
+            right: `${dotSize / 2}px`,
+            height: '2px',
+            backgroundColor: '#E5E7EB',
+            top: `${dotSize / 2 - 1}px` // Center of dot, minus half the line height
+          }}
         ></div>
         
-        {/* Step dots */}
-        <div className="flex justify-between relative">
+        {/* Progress line with exact same positioning */}
+        <div 
+          style={{ 
+            position: 'absolute',
+            left: `${dotSize / 2}px`,
+            height: '2px',
+            backgroundColor: '#E85427',
+            top: `${dotSize / 2 - 1}px`,
+            width: currentStep > 1 ? `calc(${((currentStep - 1) / (steps.length - 1)) * 100}% - ${dotSize}px)` : '0'
+          }}
+        ></div>
+        
+        {/* Dots with absolute positioning and explicit z-index */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between',
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          zIndex: 10
+        }}>
           {steps.map((step) => (
-            <div key={step.id} className="z-10">
+            <div key={step.id}>
               {step.id <= currentStep ? (
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <circle cx="10" cy="10" r="10" fill="#E85427"/>
-                </svg>
+                <SvgIcon name="step-active" color="#E85427" />
               ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
-                  <circle cx="10.3333" cy="10" r="10" fill="#D9D9D9"/>
-                </svg>
+                <SvgIcon name="step-inactive" color="#D9D9D9" />
               )}
             </div>
           ))}

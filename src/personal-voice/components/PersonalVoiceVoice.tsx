@@ -1,7 +1,7 @@
 import React from "react";
 import type { FormEvent } from "react";
 import type { VoiceProps } from "../models/voice.model";
-import { CustomRadioButton, CustomCheckbox } from "../../shared/components/ui";
+import { CustomRadioButton, CustomCheckbox } from "../../shared/components";
 
 /**
  * Presentational component for the Your Voice step
