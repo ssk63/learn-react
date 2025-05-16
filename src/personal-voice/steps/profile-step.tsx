@@ -1,10 +1,10 @@
 import React from "react";
 import { useFormStep } from "../hooks/useFormStep";
 import { validateProfile } from "../utils/validators";
-import { PersonalVoiceProfile as ProfileComponent } from "../components/PersonalVoiceProfile";
+import { PersonalVoiceProfile as ProfileComponent } from "../components/personal-voice-profile";
 import type { ProfileFormErrors } from "../models/profile.model";
-import type { ProfileData } from "../context/FormContext";
-import { StepType } from "../context/FormContext";
+import type { ProfileData } from "../context/form-context";
+import { StepType } from "../context/form-context";
 
 /**
  * Profile step for Personal Voice setup

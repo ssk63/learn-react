@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useFormContext, StepType } from '../context/FormContext';
+import { useFormContext, StepType } from '../context/form-context';
 
 type ValidationFn<T> = (data: T) => { valid: boolean; errors: Record<string, string> };
 type ErrorMapping<E> = (errors: Record<string, string>) => E;

@@ -1,4 +1,4 @@
-import type { ProfileData } from '../context/FormContext';
+import type { ProfileData } from '../context/form-context';
 
 /**
  * Errors have the same shape as the form data, but all string values

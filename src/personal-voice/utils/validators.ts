@@ -1,4 +1,4 @@
-import type { ProfileData, VoiceData } from "../context/FormContext";
+import type { ProfileData, VoiceData } from "../context/form-context";
 
 // Validation functions
 export const validateProfile = (profile: ProfileData) => {

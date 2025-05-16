@@ -1,5 +1,5 @@
 import React from "react";
-import { useFormContext, StepType } from "../context/FormContext";
+import { useFormContext, StepType } from "../context/form-context";
 import { SvgIcon } from "../../shared/icons";
 
 /**

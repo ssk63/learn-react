@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useFormContext, StepType } from "../context/FormContext";
+import { useFormContext, StepType } from "../context/form-context";
 import { useFormStep } from "../hooks/useFormStep";
-import type { FineTuningData } from "../context/FormContext";
-import { PersonalVoiceFineTuning } from "../components/PersonalVoiceFineTuning";
-import { PersonalVoicePreview } from "../components/PersonalVoicePreview";
+import type { FineTuningData } from "../context/form-context";
+import { PersonalVoiceFineTuning } from "../components/personal-voice-fine-tuning";
+import { PersonalVoicePreview } from "../components/personal-voice-preview";
 
 interface FineTuningStepProps {
   onSetupComplete?: () => void;

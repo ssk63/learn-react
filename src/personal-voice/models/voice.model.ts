@@ -1,4 +1,4 @@
-import type { VoiceData } from '../context/FormContext';
+import type { VoiceData } from '../context/form-context';
 
 /**
  * Props for the voice component

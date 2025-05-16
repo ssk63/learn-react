@@ -1,8 +1,8 @@
 import React from "react";
 import { useFormStep } from "../hooks/useFormStep";
-import type { AudienceData } from "../context/FormContext";
-import { StepType } from "../context/FormContext";
-import { PersonalVoiceAudience as AudienceComponent } from "../components/PersonalVoiceAudience";
+import type { AudienceData } from "../context/form-context";
+import { StepType } from "../context/form-context";
+import { PersonalVoiceAudience as AudienceComponent } from "../components/personal-voice-audience";
 
 /**
  * Audience step for Personal Voice setup

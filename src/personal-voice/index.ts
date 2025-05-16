@@ -1,23 +1,23 @@
 // Export the main component
-export { PersonalVoice } from './PersonalVoice';
+export { PersonalVoice } from './personal-voice';
 
 // Export the step components
-export { IntroStep } from './steps/IntroStep';
-export { ProfileStep } from './steps/ProfileStep';
-export { VoiceStep } from './steps/VoiceStep';
-export { AudienceStep } from './steps/AudienceStep';
-export { FineTuningStep } from './steps/FineTuningStep';
+export { IntroStep } from './steps/intro-step';
+export { ProfileStep } from './steps/profile-step';
+export { VoiceStep } from './steps/voice-step';
+export { AudienceStep } from './steps/audience-step';
+export { FineTuningStep } from './steps/fine-tuning-step';
 
 // Export the UI components
-export { PersonalVoiceStepper } from './components/PersonalVoiceStepper';
-export { PersonalVoiceProfile } from './components/PersonalVoiceProfile';
-export { PersonalVoiceVoice } from './components/PersonalVoiceVoice';
-export { PersonalVoiceAudience } from './components/PersonalVoiceAudience';
-export { PersonalVoiceFineTuning } from './components/PersonalVoiceFineTuning';
-export { PersonalVoicePreview } from './components/PersonalVoicePreview';
+export { PersonalVoiceStepper } from './components/personal-voice-stepper';
+export { PersonalVoiceProfile } from './components/personal-voice-profile';
+export { PersonalVoiceVoice } from './components/personal-voice-voice';
+export { PersonalVoiceAudience } from './components/personal-voice-audience';
+export { PersonalVoiceFineTuning } from './components/personal-voice-fine-tuning';
+export { PersonalVoicePreview } from './components/personal-voice-preview';
 
 // Export context and hooks
-export { FormProvider, useFormContext, StepType } from './context/FormContext';
+export { FormProvider, useFormContext, StepType } from './context/form-context';
 export { useFormStep } from './hooks/useFormStep';
 
 // Export all models

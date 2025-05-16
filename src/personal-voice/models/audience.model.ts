@@ -1,4 +1,4 @@
-import type { AudienceData } from '../context/FormContext';
+import type { AudienceData } from '../context/form-context';
 
 /**
  * Props for the audience component

@@ -1,5 +1,5 @@
-export { CustomCheckbox } from './CustomCheckbox';
-export { CustomRadioButton } from './CustomRadioButton';
-export { ToggleSwitch } from './ToggleSwitch';
-export { InfoNotice } from './InfoNotice';
-export { ConfirmationDialog } from './ConfirmationDialog'; 
+export { CustomCheckbox } from './custom-checkbox';
+export { CustomRadioButton } from './custom-radio-button';
+export { ToggleSwitch } from './toggle-switch';
+export { InfoNotice } from './info-notice';
+export { ConfirmationDialog } from './confirmation-dialog'; 

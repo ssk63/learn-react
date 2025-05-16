@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import type { FormState } from '../context/FormContext';
+import type { FormState } from '../context/form-context';
 import { InfoNotice } from '../../shared/components';
-import { DeleteConfirmationModal } from './DeleteConfirmationModal';
+import { DeleteConfirmationModal } from './delete-confirmation-modal';
 
 interface PersonalVoicePreviewProps {
   formData: FormState;

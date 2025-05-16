@@ -1,4 +1,4 @@
-import type { FineTuningData } from '../context/FormContext';
+import type { FineTuningData } from '../context/form-context';
 
 /**
  * Props for the fine-tuning component

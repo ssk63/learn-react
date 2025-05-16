@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useFormContext, StepType } from "./context/FormContext";
-import type { FormState } from "./context/FormContext";
-import { IntroStep } from "./steps/IntroStep";
-import { ProfileStep } from "./steps/ProfileStep";
-import { VoiceStep } from "./steps/VoiceStep";
-import { AudienceStep } from "./steps/AudienceStep";
-import { FineTuningStep } from "./steps/FineTuningStep";
-import { PersonalVoiceStepper } from "./components/PersonalVoiceStepper";
-import { PersonalVoicePreview } from "./components/PersonalVoicePreview";
+import { useFormContext, StepType } from "./context/form-context";
+import type { FormState } from "./context/form-context";
+import { IntroStep } from "./steps/intro-step";
+import { ProfileStep } from "./steps/profile-step";
+import { VoiceStep } from "./steps/voice-step";
+import { AudienceStep } from "./steps/audience-step";
+import { FineTuningStep } from "./steps/fine-tuning-step";
+import { PersonalVoiceStepper } from "./components/personal-voice-stepper";
+import { PersonalVoicePreview } from "./components/personal-voice-preview";
 
 // Mock function to simulate an Apollo GraphQL query
 const fetchPersonalVoiceData = (): Promise<{ personalVoice: FormState | null }> => {

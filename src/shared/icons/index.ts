@@ -1,2 +1,2 @@
-export { SvgIcon } from './SvgIcon';
-export type { IconName, IconSize } from './SvgIcon'; 
+export { SvgIcon } from './svg-icon';
+export type { IconName, IconSize } from './svg-icon'; 

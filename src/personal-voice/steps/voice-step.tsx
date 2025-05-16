@@ -1,9 +1,9 @@
 import React from "react";
 import { useFormStep } from "../hooks/useFormStep";
 import { validateVoice } from "../utils/validators";
-import { PersonalVoiceVoice as VoiceComponent } from "../components/PersonalVoiceVoice";
-import type { VoiceData } from "../context/FormContext";
-import { StepType } from "../context/FormContext";
+import { PersonalVoiceVoice as VoiceComponent } from "../components/personal-voice-voice";
+import type { VoiceData } from "../context/form-context";
+import { StepType } from "../context/form-context";
 
 /**
  * Voice step for Personal Voice setup
