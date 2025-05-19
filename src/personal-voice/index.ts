@@ -16,6 +16,9 @@ export { PersonalVoiceAudience } from './components/personal-voice-audience';
 export { PersonalVoiceFineTuning } from './components/personal-voice-fine-tuning';
 export { PersonalVoicePreview } from './components/personal-voice-preview';
 
+// Export services
+export { PersonalVoiceClient } from './services/personalVoice.service';
+
 // Export context and hooks
 export { FormProvider, useFormContext, StepType } from './context/form-context';
 export { useFormStep } from './hooks/useFormStep';

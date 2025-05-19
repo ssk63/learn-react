@@ -8,50 +8,77 @@ import { AudienceStep } from "./steps/audience-step";
 import { FineTuningStep } from "./steps/fine-tuning-step";
 import { PersonalVoiceStepper } from "./components/personal-voice-stepper";
 import { PersonalVoicePreview } from "./components/personal-voice-preview";
+import { PersonalVoiceClient } from "./services/personalVoice.service";
+import type { PersonalVoiceModel, PersonalVoiceWithId } from "../backend/types/personalVoice.types";
+import type { AxiosError } from "axios";
 
-// Mock function to simulate an Apollo GraphQL query
-const fetchPersonalVoiceData = (): Promise<{ personalVoice: FormState | null }> => {
-  // For demonstration, we'll return sample data or null based on some condition
-  // In a real app, this would be replaced with an actual Apollo query
-  
-  // Simulate API delay
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // Get data from localStorage for demo purposes
-      const personalVoiceExists = localStorage.getItem('personalVoiceExists');
-      
-      if (personalVoiceExists === 'true') {
-        // Sample data that would come from the API
-        resolve({
-          personalVoice: {
-            profile: {
-              jobTitle: 'Sales Executive',
-              region: 'Europe',
-              skills: 'Sales, Motivation, Writing, Speaking'
-            },
-            voice: {
-              writingSample: '',
-              creativityLevel: 'balanced',
-              tones: ['conversational', 'casual', 'confident']
-            },
-            audience: {
-              targetGroups: ['sales', 'operations', 'it']
-            },
-            fineTuning: {
-              audienceType: '',
-              callToAction: 'Encourage Discussion',
-              useEmojis: false,
-              translateContent: false,
-              translateLanguage: ''
-            }
-          }
-        });
-      } else {
-        // No personal voice configured yet
-        resolve({ personalVoice: null });
-      }
-    }, 500); // Simulate network delay
-  });
+// Convert from API model to form state
+const convertToFormState = (model: PersonalVoiceModel | PersonalVoiceWithId): FormState => {
+  return {
+    profile: {
+      jobTitle: model.profile.jobTitle,
+      region: model.profile.geographicalFocus,
+      skills: model.profile.skillsAndExpertise.join(', ')
+    },
+    voice: {
+      writingSample: model.toneOfVoice.writingSample,
+      creativityLevel: 'balanced', // Default value since API doesn't have this
+      tones: model.toneOfVoice.toneOfVoiceAttributes
+    },
+    audience: {
+      targetGroups: model.audience.audienceDemographics
+    },
+    fineTuning: {
+      audienceType: '', // Default value since API doesn't have this
+      callToAction: model.fineTuning.engagementStyle,
+      useEmojis: model.fineTuning.useEmojis,
+      translateContent: model.fineTuning.translate,
+      translateLanguage: model.fineTuning.translateTo
+    }
+  };
+};
+
+// Convert from form state to API model
+const convertToApiModel = (formState: FormState): PersonalVoiceModel => {
+  // Make sure we have a non-empty skills array even if skills is empty
+  const skillsArray = formState.profile.skills
+    ? formState.profile.skills.split(',').filter(skill => skill.trim().length > 0).map(skill => skill.trim())
+    : ['General'];
+    
+  // Ensure we have at least one tone attribute
+  const tones = formState.voice.tones.length > 0
+    ? formState.voice.tones
+    : ['Professional'];
+    
+  // Ensure we have at least one audience demographic
+  const demographics = formState.audience.targetGroups.length > 0
+    ? formState.audience.targetGroups
+    : ['General Audience'];
+    
+  return {
+    key: `personal-voice-${Date.now()}`, // Generate a unique key
+    name: `Personal Voice - ${formState.profile.jobTitle || 'User'}`, // Generate a name with fallback
+    enabled: true,
+    profile: {
+      jobTitle: formState.profile.jobTitle || 'Professional',
+      geographicalFocus: formState.profile.region || 'Global',
+      skillsAndExpertise: skillsArray
+    },
+    toneOfVoice: {
+      writingSample: formState.voice.writingSample || 'This is a sample text for the personal voice.',
+      toneOfVoiceAttributes: tones
+    },
+    audience: {
+      audienceDemographics: demographics
+    },
+    fineTuning: {
+      temperature: 0.7, // Default value
+      engagementStyle: formState.fineTuning.callToAction || 'Informative',
+      useEmojis: !!formState.fineTuning.useEmojis,
+      translate: !!formState.fineTuning.translateContent,
+      translateTo: formState.fineTuning.translateLanguage || ''
+    }
+  };
 };
 
 /**
@@ -59,11 +86,12 @@ const fetchPersonalVoiceData = (): Promise<{ personalVoice: FormState | null }> 
  * Uses Context API for steps, but handles preview mode independently
  */
 export const PersonalVoice: React.FC = () => {
-  const { currentStep, formState } = useFormContext();
+  const { currentStep, formState, updateProfile, updateVoice, updateAudience, updateFineTuning, goToStep } = useFormContext();
   const [personalVoiceData, setPersonalVoiceData] = useState<FormState | null>(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
+  const [voiceId, setVoiceId] = useState<string | null>(null);
   
   // Fetch personal voice data on component mount - ONLY ONCE
   useEffect(() => {
@@ -72,11 +100,25 @@ export const PersonalVoice: React.FC = () => {
       const fetchData = async () => {
         try {
           setLoading(true);
-          const { personalVoice } = await fetchPersonalVoiceData();
-          setPersonalVoiceData(personalVoice);
+          
+          // Get all voices and use the first one if available
+          const voices = await PersonalVoiceClient.getAllVoices();
+          
+          if (voices.length > 0) {
+            // Get the first voice as an example
+            const voiceModel = voices[0] as PersonalVoiceWithId;
+            const formState = convertToFormState(voiceModel);
+            
+            setPersonalVoiceData(formState);
+            setVoiceId(voiceModel.id);
+          } else {
+            setPersonalVoiceData(null);
+          }
+          
           setHasFetched(true);
         } catch (error) {
           console.error('Error fetching personal voice data:', error);
+          setHasFetched(true); // Set this to true so we don't keep trying
         } finally {
           setLoading(false);
         }
@@ -106,18 +148,70 @@ export const PersonalVoice: React.FC = () => {
   const currentStepNumber = stepToNumberMapping[currentStep] || 0;
   
   // Handle actions from the preview component
-  const handleDelete = () => {
-    // In a real app, this would make an API call to delete the personal voice
-    localStorage.removeItem('personalVoiceExists');
-    setPersonalVoiceData(null);
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      if (voiceId) {
+        await PersonalVoiceClient.deleteVoice(voiceId);
+      }
+      setPersonalVoiceData(null);
+      setVoiceId(null);
+    } catch (error) {
+      console.error('Error deleting voice:', error);
+    } finally {
+      setLoading(false);
+    }
   };
   
   const handleEdit = () => {
-    setEditMode(true);
+    // When editing, initialize form with current data
+    if (personalVoiceData) {
+      // Set all values in the form context
+      const { profile, voice, audience, fineTuning } = personalVoiceData;
+      
+      // Update each section of the form
+      if (profile) {
+        updateProfile({
+          jobTitle: profile.jobTitle,
+          region: profile.region,
+          skills: profile.skills
+        });
+      }
+      
+      if (voice) {
+        updateVoice({
+          writingSample: voice.writingSample,
+          creativityLevel: voice.creativityLevel,
+          tones: [...voice.tones]
+        });
+      }
+      
+      if (audience) {
+        updateAudience({
+          targetGroups: [...audience.targetGroups]
+        });
+      }
+      
+      if (fineTuning) {
+        updateFineTuning({
+          audienceType: fineTuning.audienceType,
+          callToAction: fineTuning.callToAction,
+          useEmojis: fineTuning.useEmojis,
+          translateContent: fineTuning.translateContent,
+          translateLanguage: fineTuning.translateLanguage
+        });
+      }
+      
+      // Start editing at the profile step
+      goToStep(StepType.PROFILE);
+      
+      // Set edit mode (displays the form)
+      setEditMode(true);
+    }
   };
   
   const handleTest = () => {
-    // In a real app, this would trigger a test of the configured voice
+    // For demo purposes, just alert
     alert("Testing your personal voice settings...");
   };
   
@@ -133,11 +227,37 @@ export const PersonalVoice: React.FC = () => {
       case StepType.AUDIENCE:
         return <AudienceStep />;
       case StepType.FINE_TUNING:
-        return <FineTuningStep onSetupComplete={() => {
-          // Save to localStorage for demo purposes - in a real app, this would be an API call
-          localStorage.setItem('personalVoiceExists', 'true');
-          setPersonalVoiceData(formState);
-          setEditMode(false);
+        return <FineTuningStep onSetupComplete={async () => {
+          try {
+            setLoading(true);
+            
+            // Convert form state to API model
+            const apiModel = convertToApiModel(formState);
+            
+            // Debug log to see what we're sending
+            console.log("Sending to API:", apiModel);
+            
+            // Create or update the voice
+            let savedVoice;
+            if (voiceId) {
+              savedVoice = await PersonalVoiceClient.updateVoice(voiceId, apiModel);
+            } else {
+              savedVoice = await PersonalVoiceClient.createVoice(apiModel);
+            }
+            
+            // Convert back to form state for the preview
+            const updatedFormState = convertToFormState(savedVoice);
+            setPersonalVoiceData(updatedFormState);
+            setVoiceId((savedVoice as PersonalVoiceWithId).id);
+            setEditMode(false);
+          } catch (error) {
+            console.error('Error saving voice:', error);
+            if ((error as AxiosError).isAxiosError) {
+              console.log('Error details:', (error as AxiosError).response?.data);
+            }
+          } finally {
+            setLoading(false);
+          }
         }} />;
       default:
         return <IntroStep />;
